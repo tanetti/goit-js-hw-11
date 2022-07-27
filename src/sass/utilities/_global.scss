@@ -1,3 +1,10 @@
+html,
 body {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $main-font;
+
   background-color: $main-bg-color;
 }
