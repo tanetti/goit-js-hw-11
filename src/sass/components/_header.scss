@@ -1,0 +1,23 @@
+.header {
+  @extend %section;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  background-color: #ffffff90;
+  backdrop-filter: blur(3px);
+
+  border-bottom: 1px solid #aaaaaa80;
+
+  box-shadow: 0px 1px 3px #eeeeee34, 0px 1px 1px #aaaaaa34, 0px 2px 1px #eeeeee34;
+}
+
+.header__container {
+  @extend %container;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
