@@ -1,4 +1,5 @@
 import axios from 'axios';
+import throttle from 'lodash.throttle';
 
 export default class GalleryGenerator {
   #baseURL;
@@ -8,7 +9,9 @@ export default class GalleryGenerator {
   #onError;
   #simpleLightboxInstance;
   #scrollToNewResult;
+  #infiniteScroll;
   #currentTotalHits;
+  #totalResults;
 
   constructor() {
     this.#baseURL = 'https://pixabay.com/api/';
@@ -31,8 +34,10 @@ export default class GalleryGenerator {
     this.#onError = null;
     this.#simpleLightboxInstance = null;
     this.#scrollToNewResult = true;
+    this.#infiniteScroll = true;
 
     this.#currentTotalHits = 0;
+    this.#totalResults = 0;
   }
 
   init(options) {
@@ -47,6 +52,7 @@ export default class GalleryGenerator {
       onError = null,
       simpleLightboxInstance = null,
       scrollToNewResult = true,
+      infiniteScroll = true,
     } = options;
 
     this.imageType = imageType;
@@ -57,22 +63,25 @@ export default class GalleryGenerator {
     this.#onError = onError;
     this.#simpleLightboxInstance = simpleLightboxInstance;
     this.#scrollToNewResult = scrollToNewResult;
+    this.#infiniteScroll = infiniteScroll;
   }
 
   async start() {
     if (!this.#refs.inputField) return this.#errorNotification('Input field not specified!');
     if (!this.#refs.galleryContainer) return this.#errorNotification('Gallery container not specified!');
+    if (this.#infiniteScroll && !window.onscroll) window.onscroll = throttle(this.#scrollHandler.bind(this), 200);
 
     const sanitizedQuery = this.#refs.inputField.value.trim();
 
     if (!sanitizedQuery) return;
     if (sanitizedQuery === this.query) {
       this.currentPage += 1;
-      const totalResults = this.currentPage * this.perPage;
-      if (totalResults >= this.#currentTotalHits) return this.#errorNotification("We're sorry, but you've reached the end of search results.");
+      this.#totalResults = this.currentPage * this.perPage;
+      if (this.#totalResults >= this.#currentTotalHits) return this.#errorNotification("We're sorry, but you've reached the end of search results.");
     } else {
       this.query = sanitizedQuery;
       this.currentPage = 1;
+      this.#totalResults = 0;
       this.#refs.galleryContainer.innerHTML = '';
     }
 
@@ -165,5 +174,12 @@ export default class GalleryGenerator {
   #toggleLoaderVisibility() {
     if (!this.#refs.galleryLoader) return;
     this.#refs.galleryLoader.classList.toggle('is-hidden');
+  }
+
+  #scrollHandler() {
+    if (this.#totalResults >= this.#currentTotalHits) return;
+    const { height: galleryHeight } = this.#refs.galleryContainer.getBoundingClientRect();
+
+    if (window.scrollY > galleryHeight - window.innerHeight) this.start();
   }
 }

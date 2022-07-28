@@ -26,6 +26,7 @@ galleryGenerator.init({
   onSuccess: Notify.success,
   onError: Notify.failure,
   simpleLightboxInstance: gallery,
+  perPage: 5,
 
   // ------ Default values ------
   // imageType: 'photo',
@@ -36,6 +37,7 @@ galleryGenerator.init({
   // onError: null,
   // simpleLightboxInstance: null,
   // scrollToNewResult: true,
+  // infiniteScroll = true,
 });
 
 const refs = {
