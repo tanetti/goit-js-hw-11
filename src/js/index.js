@@ -1,12 +1,31 @@
 import '../sass/index.scss';
 import { Notify } from 'notiflix';
-import { GalleryGenerator } from './gallery-generator/gallery-generator';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import GalleryGenerator from './gallery-generator/gallery-generator';
 
-const gallery = new GalleryGenerator();
+Notify.init({
+  position: 'right-bottom',
+  distance: '20px',
+  borderRadius: '14px',
+  timeout: 5000,
+  clickToClose: true,
+  cssAnimationStyle: 'from-right',
+});
 
-gallery.init({
+const gallery = new SimpleLightbox('div.gallery__content a', {
+  maxZoom: 2,
+  overlayOpacity: 0.85,
+  captionsData: 'alt',
+  disableRightClick: true,
+  alertError: false,
+});
+
+const galleryGenerator = new GalleryGenerator();
+galleryGenerator.init({
   onSuccess: Notify.success,
   onError: Notify.failure,
+  simpleLightboxInstance: gallery,
 
   // ------ Default values ------
   // imageType: 'photo',
@@ -15,6 +34,8 @@ gallery.init({
   // perPage: 40,
   // onSuccess: null,
   // onError: null,
+  // simpleLightboxInstance: null,
+  // scrollToNewResult: true,
 });
 
 const refs = {
@@ -24,7 +45,7 @@ const refs = {
 const onFormSubmit = event => {
   event.preventDefault();
 
-  gallery.start();
+  galleryGenerator.start();
 };
 
 refs.serchForm.addEventListener('submit', onFormSubmit);
