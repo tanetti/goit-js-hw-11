@@ -1,5 +1,4 @@
 import axios from 'axios';
-import throttle from 'lodash.throttle';
 
 export default class GalleryGenerator {
   #baseURL;
@@ -8,10 +7,10 @@ export default class GalleryGenerator {
   #onSuccess;
   #onError;
   #simpleLightboxInstance;
-  #scrollToNewResult;
+  #scrollToNewResults;
   #infiniteScroll;
   #currentTotalHits;
-  #totalResults;
+  #resultsHeight;
 
   constructor() {
     this.#baseURL = 'https://pixabay.com/api/';
@@ -33,11 +32,11 @@ export default class GalleryGenerator {
     this.#onSuccess = null;
     this.#onError = null;
     this.#simpleLightboxInstance = null;
-    this.#scrollToNewResult = true;
+    this.#scrollToNewResults = true;
     this.#infiniteScroll = true;
 
     this.#currentTotalHits = 0;
-    this.#totalResults = 0;
+    this.#resultsHeight = 0;
   }
 
   init(options) {
@@ -51,7 +50,7 @@ export default class GalleryGenerator {
       onSuccess = null,
       onError = null,
       simpleLightboxInstance = null,
-      scrollToNewResult = true,
+      scrollToNewResults = true,
       infiniteScroll = true,
     } = options;
 
@@ -62,26 +61,26 @@ export default class GalleryGenerator {
     this.#onSuccess = onSuccess;
     this.#onError = onError;
     this.#simpleLightboxInstance = simpleLightboxInstance;
-    this.#scrollToNewResult = scrollToNewResult;
+    this.#scrollToNewResults = scrollToNewResults;
     this.#infiniteScroll = infiniteScroll;
   }
 
-  async start() {
+  async start(isTrigereredByScroll = false) {
     if (!this.#refs.inputField) return this.#errorNotification('Input field not specified!');
     if (!this.#refs.galleryContainer) return this.#errorNotification('Gallery container not specified!');
-    if (this.#infiniteScroll && !window.onscroll) window.onscroll = throttle(this.#scrollHandler.bind(this), 200);
 
     const sanitizedQuery = this.#refs.inputField.value.trim();
 
     if (!sanitizedQuery) return;
+
     if (sanitizedQuery === this.query) {
-      this.currentPage += 1;
-      this.#totalResults = this.currentPage * this.perPage;
-      if (this.#totalResults >= this.#currentTotalHits) return this.#errorNotification("We're sorry, but you've reached the end of search results.");
+      if (this.#currentTotalHits === 0) return this.#errorNotification('Sorry, there are no images matching your search query. Please try again.');
+
+      const totalHitsRendered = this.currentPage * this.perPage;
+      if (totalHitsRendered >= this.#currentTotalHits) return this.#errorNotification("We're sorry, but you've reached the end of search results.");
     } else {
       this.query = sanitizedQuery;
       this.currentPage = 1;
-      this.#totalResults = 0;
       this.#refs.galleryContainer.innerHTML = '';
     }
 
@@ -94,6 +93,10 @@ export default class GalleryGenerator {
     }
 
     this.#toggleLoaderVisibility();
+
+    if (this.#infiniteScroll) this.#createInfiniteScrollHandler();
+
+    if (this.#scrollToNewResults && !isTrigereredByScroll && this.currentPage >= 2) this.#scrollToNewResult();
   }
 
   async #fetchData() {
@@ -115,19 +118,17 @@ export default class GalleryGenerator {
 
     this.#currentTotalHits = totalHits;
     if (totalHits === 0) return this.#errorNotification('Sorry, there are no images matching your search query. Please try again.');
-    if (this.currentPage === 1) this.#successNotification(`Hooray! We found ${totalHits == 500 ? '500+' : totalHits} images.`);
-
-    let galleryHeight = 0;
-    if (this.#scrollToNewResult && this.currentPage !== 1) {
-      const { height } = this.#refs.galleryContainer.getBoundingClientRect();
-      galleryHeight = height;
-    }
 
     this.#refs.galleryContainer.insertAdjacentHTML('beforeend', this.#createGalleryMarkup(hits));
 
-    if (this.#simpleLightboxInstance) this.#simpleLightboxInstance.refresh();
+    if (this.currentPage === 1) {
+      this.#successNotification(`Hooray! We found ${totalHits == 500 ? '500+' : totalHits} images.`);
+      this.#resultsHeight = this.#refs.galleryContainer.getBoundingClientRect();
+    }
 
-    if (galleryHeight) window.scrollTo(0, galleryHeight);
+    this.currentPage += 1;
+
+    if (this.#simpleLightboxInstance) this.#simpleLightboxInstance.refresh();
   }
 
   #createGalleryMarkup(imagesData) {
@@ -176,10 +177,24 @@ export default class GalleryGenerator {
     this.#refs.galleryLoader.classList.toggle('is-hidden');
   }
 
-  #scrollHandler() {
-    if (this.#totalResults >= this.#currentTotalHits) return;
-    const { height: galleryHeight } = this.#refs.galleryContainer.getBoundingClientRect();
+  #scrollToNewResult() {
+    window.scrollBy(0, this.#resultsHeight.height);
+    console.log('Scroll');
+  }
 
-    if (window.scrollY > galleryHeight - window.innerHeight) this.start();
+  #createInfiniteScrollHandler() {
+    const observer = new IntersectionObserver(this.#onInfiniteScrollIntersection.bind(this), { threshold: 0.1 });
+    const lastLoadedImage = this.#refs.galleryContainer.lastElementChild;
+
+    lastLoadedImage && observer.observe(lastLoadedImage);
+  }
+
+  #onInfiniteScrollIntersection(entries, observer) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target);
+        this.start(true);
+      }
+    });
   }
 }
