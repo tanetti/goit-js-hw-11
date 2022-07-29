@@ -70,7 +70,6 @@ export default class GalleryGenerator {
   }
 
   async start(isTrigereredByScroll = false) {
-    console.log(this.currentPage);
     if (!this.#refs.inputField) return this.#failureNotification('Input field not specified!');
     if (!this.#refs.galleryContainer) return this.#failureNotification('Gallery container not specified!');
 
