@@ -20,6 +20,7 @@ export default class GalleryGenerator {
       inputField: document.querySelector('[data-gallery="input"]'),
       galleryContainer: document.querySelector('[data-gallery="container"]'),
       galleryLoader: document.querySelector('[data-gallery="loader"]'),
+      galleryPlaceholder: document.querySelector('[data-gallery="placeholder"]'),
     };
 
     this.query = '';
@@ -124,7 +125,13 @@ export default class GalleryGenerator {
     const { hits, totalHits } = data;
 
     this.#currentTotalHits = totalHits;
-    if (totalHits === 0) return this.#failureNotification('Sorry, there are no images matching your search query. Please try again.');
+    if (totalHits === 0) {
+      this.#refs.galleryPlaceholder && this.#refs.galleryPlaceholder.classList.remove('is-hidden');
+      this.#failureNotification('Sorry, there are no images matching your search query. Please try again.');
+      return;
+    }
+
+    this.#refs.galleryPlaceholder && this.#refs.galleryPlaceholder.classList.add('is-hidden');
 
     this.#refs.galleryContainer.insertAdjacentHTML('beforeend', this.#createGalleryMarkup(hits));
 

@@ -13,7 +13,14 @@
     <header class="header">
       <div class="header__container">
         <form class="search-form" id="search-form">
-          <input class="search-form__input" type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." data-gallery="input" />
+          <input
+            class="search-form__input"
+            type="text"
+            name="searchQuery"
+            autocomplete="off"
+            placeholder="What do you want to see..."
+            data-gallery="input"
+          />
           <button class="search-form__submit" type="submit">
             <svg class="search-form__icon" width="20" height="20">
               <use href="./images/sprite.svg#search"></use>
@@ -27,6 +34,7 @@
       <section class="gallery">
         <div class="gallery__container">
           <h1 class="visually-hidden">Images that you search</h1>
+          <div class="gallery__placeholder" data-gallery="placeholder">Let's find some images...</div>
           <div class="gallery__content" data-gallery="container"></div>
         </div>
       </section>
