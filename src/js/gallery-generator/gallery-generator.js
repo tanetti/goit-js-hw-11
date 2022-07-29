@@ -135,6 +135,8 @@ export default class GalleryGenerator {
 
     this.#refs.galleryContainer.insertAdjacentHTML('beforeend', this.#createGalleryMarkup(hits));
 
+    this.#animateImagesloading();
+
     if (this.currentPage === 1) this.#successNotification(`Hooray! We found ${totalHits == 500 ? '500+' : totalHits} images.`);
     if (this.#simpleLightboxInstance) this.#simpleLightboxInstance.refresh();
     this.currentPage += 1;
@@ -147,7 +149,12 @@ export default class GalleryGenerator {
           `<a class="card" href="${largeImageURL}" ${this.#aosAnimation ? `data-aos=${this.#aosAnimation}` : ''}>
             <div class="card__container">
               <div class="card__image-container">
-                <img class="card__image" src="${webformatURL}" alt="${tags}" width="220" height="150" loading="lazy"/>
+                <div class="card__image-loader">
+                  <div class="image-loader"></div>
+                </div>
+                <img class="card__image is-hidden" src="${webformatURL}" alt="${tags}" ${
+            this.orientation === 'vertical' ? 'width="220" height="330"' : 'width="220" height="150"'
+          } loading="lazy" />
               </div>
               <div class="card__info">
                 <p class="card__info-item">
@@ -171,6 +178,24 @@ export default class GalleryGenerator {
           </a>`
       )
       .join('');
+  }
+
+  #animateImagesloading() {
+    const cards = this.#refs.galleryContainer.querySelectorAll('a.card');
+
+    const cardProcessing = card => {
+      const imageLoager = card.querySelector('div.card__image-loader');
+      const image = card.querySelector('img.card__image');
+
+      const showImage = () => {
+        imageLoager.classList.add('is-hidden');
+        image.classList.remove('is-hidden');
+      };
+
+      image.addEventListener('load', showImage, { once: true });
+    };
+
+    cards && cards.forEach(cardProcessing);
   }
 
   #successNotification(message) {
