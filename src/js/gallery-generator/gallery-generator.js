@@ -137,24 +137,28 @@ export default class GalleryGenerator {
       .map(
         ({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
           `<a class="card" href="${largeImageURL}" ${this.#aosAnimation ? `data-aos=${this.#aosAnimation}` : ''}>
-            <img class="card__image" src="${webformatURL}" alt="${tags}" width="220" height="150" loading="lazy"/>
-            <div class="card__info">
-              <p class="card__info-item">
-                <b>Likes</b>
-                <span class="card__item-count">${likes}</span>
-              </p>
-              <p class="card__info-item">
-                <b>Views</b>
-                <span class="card__item-count">${views}</span>
-              </p>
-              <p class="card__info-item">
-                <b>Comments</b>
-                <span class="card__item-count">${comments}</span>
-              </p>
-              <p class="card__info-item">
-                <b>Downloads</b>
-                <span class="card__item-count">${downloads}</span>
-              </p>
+            <div class="card__container">
+              <div class="card__image-container">
+                <img class="card__image" src="${webformatURL}" alt="${tags}" width="220" height="150" loading="lazy"/>
+              </div>
+              <div class="card__info">
+                <p class="card__info-item">
+                  <b>Likes</b>
+                  <span class="card__item-count">${likes}</span>
+                </p>
+                <p class="card__info-item">
+                  <b>Views</b>
+                  <span class="card__item-count">${views}</span>
+                </p>
+                <p class="card__info-item">
+                  <b>Comments</b>
+                  <span class="card__item-count">${comments}</span>
+                </p>
+                <p class="card__info-item">
+                  <b>Downloads</b>
+                  <span class="card__item-count">${downloads}</span>
+                </p>
+              </div>
             </div>
           </a>`
       )
