@@ -18,8 +18,11 @@
   animation-delay: -0.16s;
   animation-fill-mode: both;
 
+  transition: opacity $transition-timing $transition-function, visibility $transition-timing $transition-function;
+
   &.is-hidden {
-    display: none;
+    opacity: 0;
+    visibility: none;
   }
 
   &::before {
