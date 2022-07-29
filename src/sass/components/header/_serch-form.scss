@@ -21,21 +21,20 @@
 
   background-color: $serch-bg-color;
 
-  border-width: 1px;
-  border-style: solid;
+  border: 1px solid #a1a1a1;
+  border-right-width: 0;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  border-color: #a1a1a1;
 
   outline: transparent;
 
-  transition: border-color $transition-timing $transition-function;
+  transition: border-color $transition-timing $transition-function, box-shadow $transition-timing $transition-function;
 
   &:hover,
   &:focus {
-    border-top-color: #414141;
-    border-bottom-color: #414141;
-    border-left-color: #414141;
+    border-color: #414141;
+
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 4px 4px rgba(0, 0, 0, 0.06), 1px 4px 6px rgba(0, 0, 0, 0.16);
   }
 }
 
@@ -49,23 +48,23 @@
   color: #818181;
   background-color: $serch-bg-color;
 
-  border-width: 1px;
-  border-style: solid;
+  border: 1px solid #a1a1a1;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
-  border-color: #a1a1a1;
 
   cursor: pointer;
   outline: transparent;
 
-  transition: border-color $transition-timing $transition-function, color $transition-timing $transition-function;
+  transition: border-color $transition-timing $transition-function, color $transition-timing $transition-function,
+    box-shadow $transition-timing $transition-function;
 
   &:hover,
   &:focus {
     color: #414141;
-    border-top-color: #414141;
-    border-bottom-color: #414141;
-    border-right-color: #414141;
+
+    border-color: #414141;
+
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 4px 4px rgba(0, 0, 0, 0.06), 1px 4px 6px rgba(0, 0, 0, 0.16);
   }
 }
 

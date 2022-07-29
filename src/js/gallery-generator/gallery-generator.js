@@ -70,6 +70,7 @@ export default class GalleryGenerator {
   }
 
   async start(isTrigereredByScroll = false) {
+    console.log(this.currentPage);
     if (!this.#refs.inputField) return this.#failureNotification('Input field not specified!');
     if (!this.#refs.galleryContainer) return this.#failureNotification('Gallery container not specified!');
 
@@ -77,10 +78,11 @@ export default class GalleryGenerator {
 
     if (!sanitizedQuery) return;
 
+    const totalHitsRendered = this.currentPage * this.perPage;
+
     if (sanitizedQuery === this.query) {
       if (this.#currentTotalHits === 0) return this.#failureNotification('Sorry, there are no images matching your search query. Please try again.');
 
-      const totalHitsRendered = this.currentPage * this.perPage;
       if (totalHitsRendered >= this.#currentTotalHits) return this.#failureNotification("We're sorry, but you've reached the end of search results.");
     } else {
       this.query = sanitizedQuery;
@@ -102,7 +104,7 @@ export default class GalleryGenerator {
     if (this.#scrollToNewResults && !isTrigereredByScroll && this.currentPage > 2) this.#scrollToNewResult(galleryDimensions);
     this.#toggleLoaderVisibility();
 
-    if (this.#infiniteScroll) this.#createInfiniteScrollObserver();
+    if (this.#infiniteScroll && totalHitsRendered < this.#currentTotalHits) this.#createInfiniteScrollObserver();
   }
 
   async #fetchData() {
