@@ -105,6 +105,8 @@ setSettingsValues();
 const onFormSubmit = async event => {
   event.preventDefault();
 
+  refs.searchForm.classList.contains('settings-is-open') && onSearchFormSettingsButtonClick();
+
   await galleryGenerator.start();
 
   startGalleryScrollObserver();
