@@ -1,4 +1,5 @@
 import '../sass/index.scss';
+import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -59,9 +60,47 @@ galleryGenerator.init({
 });
 
 const refs = {
-  serchForm: document.querySelector('form#search-form'),
+  searchForm: document.querySelector('form#search-form'),
+  searchFormSettingsButton: document.querySelector('button#settings-button'),
+  orientationSwitch: document.querySelector('fieldset#orientation'),
+  perPageField: document.querySelector('input#perPage'),
   scrollToTopButton: document.querySelector('button#scroll-to-top'),
 };
+
+const setSearchOrientation = searchOrientation => {
+  if (!searchOrientation) return;
+
+  const orientationRadios = refs.orientationSwitch.querySelectorAll('input.orientation__radio');
+
+  orientationRadios.forEach(radio => {
+    if (radio.hasAttribute('checked')) {
+      radio.removeAttribute('checked');
+      return;
+    }
+  });
+
+  orientationRadios.forEach(radio => {
+    if (radio.value === searchOrientation) {
+      radio.setAttribute('checked', true);
+    }
+  });
+
+  galleryGenerator.orientation = searchOrientation;
+};
+
+const setSearchPerPage = searchPerPage => {
+  if (!searchPerPage) return;
+
+  refs.perPageField.value = searchPerPage;
+  galleryGenerator.perPage = Number(searchPerPage);
+};
+
+const setSettingsValues = () => {
+  setSearchOrientation(localStorage.getItem('searchOrientation') ?? galleryGenerator.orientation);
+  setSearchPerPage(localStorage.getItem('searchPerPage') ?? galleryGenerator.perPage);
+};
+
+setSettingsValues();
 
 const onFormSubmit = async event => {
   event.preventDefault();
@@ -71,7 +110,52 @@ const onFormSubmit = async event => {
   startGalleryScrollObserver();
 };
 
+const onSearchFormSettingsButtonClick = () => {
+  const isExpanded = refs.searchFormSettingsButton.getAttribute('aria-expanded') === 'true' ? true : false;
+
+  refs.searchFormSettingsButton.setAttribute('aria-expanded', !isExpanded);
+  refs.searchForm.classList.toggle('settings-is-open');
+};
+
+const onOrientationSwitchClick = () => {
+  const orientationRadios = Array.from(refs.orientationSwitch.querySelectorAll('input.orientation__radio'));
+
+  orientationRadios.forEach(radio => {
+    if (radio.hasAttribute('checked')) {
+      radio.removeAttribute('checked');
+      orientationRadios.splice(orientationRadios.indexOf(radio), 1);
+      return;
+    }
+  });
+
+  orientationRadios[0].setAttribute('checked', true);
+
+  const currentOrientationValue = refs.searchForm.orientation.value;
+
+  galleryGenerator.orientation = currentOrientationValue;
+  galleryGenerator.query = '';
+
+  localStorage.setItem('searchOrientation', currentOrientationValue);
+};
+
+const onPerPageFieldInput = ({ target: input }) => {
+  const perPageFieldValue = Number(input.value);
+
+  if (perPageFieldValue < 3) input.value = 3;
+  if (perPageFieldValue > 200) input.value = 200;
+
+  const currentPerPage = Number(input.value);
+
+  galleryGenerator.perPage = currentPerPage;
+
+  localStorage.setItem('searchPerPage', currentPerPage);
+};
+
 const onScrollToTopButtonClick = () => window.scrollTo(0, 0);
 
-refs.serchForm.addEventListener('submit', onFormSubmit);
+refs.searchForm.addEventListener('submit', onFormSubmit);
+refs.searchFormSettingsButton.addEventListener('click', onSearchFormSettingsButtonClick);
+refs.orientationSwitch.addEventListener('click', onOrientationSwitchClick);
+refs.perPageField.addEventListener('focus', ({ currentTarget }) => currentTarget.select());
+refs.perPageField.addEventListener('input', debounce(onPerPageFieldInput, 1000));
 refs.scrollToTopButton.addEventListener('click', onScrollToTopButtonClick);
