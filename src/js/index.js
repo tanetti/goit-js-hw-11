@@ -38,9 +38,9 @@ galleryGenerator.init({
 
   // Pixabay query settings:
   //    imageType: 'photo', (STRING)
-  //    orientation: 'horizontal', (STRING)
-  //    safesearch: true, (BOOLEAN)
-  //    perPage: 40, (NUMBER)
+  //    orientation: 'horizontal', (STRING) (!!! User localStorage has higher priority !!!)
+  //    safesearch: true, (BOOLEAN) (!!! User localStorage has higher priority !!!)
+  //    perPage: 40, (NUMBER) (!!! User localStorage has higher priority !!!)
 
   // Callback for notification (Use Alet() default):
   //    onSuccess: null, (CALLBACK)
