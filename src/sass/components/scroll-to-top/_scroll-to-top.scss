@@ -1,0 +1,49 @@
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 42px;
+  height: 42px;
+
+  border-width: 1px;
+  border-color: #21212160;
+  border-radius: 50%;
+
+  color: #212121b0;
+  background-color: #aeaeaeb0;
+  backdrop-filter: blur(2px);
+
+  outline: transparent;
+
+  cursor: pointer;
+
+  box-shadow: 0px 1px 3px #eeeeee34, 0px 1px 1px #aaaaaa34, 0px 2px 1px #eeeeee34;
+
+  transition: box-shadow $transition-timing $transition-function, background-color $transition-timing $transition-function,
+    color $transition-timing $transition-function, transform $transition-timing $transition-function, opacity $transition-timing $transition-function,
+    visibility $transition-timing $transition-function;
+
+  &:hover,
+  &:focus {
+    color: #000000b0;
+    background-color: #fafafac0;
+
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 4px 4px rgba(0, 0, 0, 0.06), 1px 4px 6px rgba(0, 0, 0, 0.16);
+  }
+
+  &.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateX(82px);
+  }
+}
+
+.scroll-to-top__icon {
+  fill: currentColor;
+}

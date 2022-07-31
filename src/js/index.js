@@ -4,15 +4,16 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import { startGalleryScrollObserver } from './scroll-to-top/scroll-to-top';
 import GalleryGenerator from './gallery-generator/gallery-generator';
 
 Notify.init({
-  position: 'right-bottom',
+  position: 'center-bottom',
   distance: '20px',
   borderRadius: '14px',
   timeout: 5000,
   clickToClose: true,
-  cssAnimationStyle: 'from-right',
+  cssAnimationStyle: 'from-bottom',
 });
 
 const gallery = new SimpleLightbox('div.gallery__content a', {
@@ -59,12 +60,18 @@ galleryGenerator.init({
 
 const refs = {
   serchForm: document.querySelector('form#search-form'),
+  scrollToTopButton: document.querySelector('button#scroll-to-top'),
 };
 
-const onFormSubmit = event => {
+const onFormSubmit = async event => {
   event.preventDefault();
 
-  galleryGenerator.start();
+  await galleryGenerator.start();
+
+  startGalleryScrollObserver();
 };
 
+const onScrollToTopButtonClick = () => window.scrollTo(0, 0);
+
 refs.serchForm.addEventListener('submit', onFormSubmit);
+refs.scrollToTopButton.addEventListener('click', onScrollToTopButtonClick);

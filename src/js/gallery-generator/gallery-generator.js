@@ -10,7 +10,7 @@ export default class GalleryGenerator {
   #scrollToNewResults;
   #infiniteScroll;
   #currentTotalHits;
-  #scrollObserver;
+  #infiniteScrollObserver;
   #aosAnimation;
 
   constructor() {
@@ -39,7 +39,7 @@ export default class GalleryGenerator {
     this.#aosAnimation = '';
 
     this.#currentTotalHits = 0;
-    this.#scrollObserver = null;
+    this.#infiniteScrollObserver = null;
   }
 
   init(options) {
@@ -90,7 +90,7 @@ export default class GalleryGenerator {
       this.#refs.galleryContainer.innerHTML = '';
     }
 
-    if (this.#scrollObserver) this.#scrollObserver.disconnect();
+    if (this.#infiniteScrollObserver) this.#infiniteScrollObserver.disconnect();
 
     this.#toggleLoaderVisibility();
     const galleryDimensions = this.#refs.galleryContainer.getBoundingClientRect();
@@ -220,16 +220,16 @@ export default class GalleryGenerator {
   }
 
   #createInfiniteScrollObserver() {
-    this.#scrollObserver = new IntersectionObserver(this.#onScrollIntersection.bind(this), { threshold: 0.1 });
+    this.#infiniteScrollObserver = new IntersectionObserver(this.#onInfiniteScrollIntersection.bind(this), { threshold: 0.1 });
     const lastLoadedImage = this.#refs.galleryContainer.lastElementChild;
 
-    lastLoadedImage && this.#scrollObserver.observe(lastLoadedImage);
+    lastLoadedImage && this.#infiniteScrollObserver.observe(lastLoadedImage);
   }
 
-  #onScrollIntersection(entries, scrollObserver) {
+  #onInfiniteScrollIntersection(entries, infiniteScrollObserver) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        scrollObserver.unobserve(entry.target);
+        infiniteScrollObserver.unobserve(entry.target);
         this.start(true);
       }
     });

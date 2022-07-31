@@ -21,7 +21,7 @@
             placeholder="What do you want to see..."
             data-gallery="input"
           />
-          <button class="search-form__submit" type="submit">
+          <button class="search-form__submit" type="submit" aria-label="Start search">
             <svg class="search-form__icon" width="20" height="20">
               <use href="./images/sprite.svg#search"></use>
             </svg>
@@ -35,8 +35,13 @@
         <div class="gallery__container">
           <h1 class="visually-hidden">Images that you search</h1>
           <div class="gallery__placeholder" data-gallery="placeholder">Let's find some images...</div>
-          <div class="gallery__content" data-gallery="container"></div>
+          <div class="gallery__content" id="gallery-content" data-gallery="container"></div>
         </div>
+        <button class="scroll-to-top is-hidden" id="scroll-to-top" type="button" aria-label="Scroll to top">
+          <svg class="scroll-to-top__icon" width="20" height="20">
+            <use href="./images/sprite.svg#up"></use>
+          </svg>
+        </button>
       </section>
     </main>
     <script src="./js/index.js" type="module"></script>
