@@ -177,7 +177,7 @@ const onSafeSearchCheckboxChange = ({ currentTarget: { checked } }) => {
   setTimeout(() => {
     searchTypeSpanRef.textContent = checked ? 'Safe' : 'Adult';
     searchTypeSpanRef.classList.remove('on-change');
-  }, 100);
+  }, 110);
 
   galleryGenerator.safesearch = checked;
 
