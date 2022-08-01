@@ -98,7 +98,7 @@ const setSearchPerPage = searchPerPage => {
 };
 
 const setSafeSearch = isSafeSearch => {
-  if (typeof isSafeSearch === 'boolean') return;
+  if (typeof isSafeSearch !== 'boolean') return;
 
   if (isSafeSearch !== refs.safeSearchCheckbox.checked) refs.safeSearchCheckbox.toggleAttribute('checked');
   document.querySelector('span.safe-search__type').textContent = isSafeSearch ? 'Safe' : 'Adult';

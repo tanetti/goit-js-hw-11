@@ -27,15 +27,6 @@
               </svg>
             </button>
             <div class="search-form__settings-wrapper">
-              <input
-                class="search-form__input"
-                type="text"
-                name="searchQuery"
-                autocomplete="off"
-                placeholder="What do you want to see..."
-                aria-label="Search field"
-                data-gallery="input"
-              />
               <div class="search-form__settings-frame" id="settings-frame">
                 <ul class="settings-list">
                   <li class="settings-list__item">
@@ -45,7 +36,7 @@
                       <label class="visually-hidden" for="horizontal">Horizontal orientation</label>
                       <input class="orientation__radio visually-hidden" value="horizontal" id="horizontal" type="radio" name="orientation" checked />
                       <div class="orientation__custom-radio">
-                        <svg class="orientation__icon" width="26" height="26">
+                        <svg class="orientation__icon" width="26" height="22">
                           <use href="./images/sprite.svg#horizontal-image"></use>
                         </svg>
                         <div class="label label--hiding">Horizontal<br />orientation</div>
@@ -54,7 +45,7 @@
                       <label class="visually-hidden" for="vertical">Vertical orientation</label>
                       <input class="orientation__radio visually-hidden" value="vertical" id="vertical" type="radio" name="orientation" />
                       <div class="orientation__custom-radio">
-                        <svg class="orientation__icon" width="26" height="22">
+                        <svg class="orientation__icon" width="26" height="20">
                           <use href="./images/sprite.svg#vertical-image"></use>
                         </svg>
                         <div class="label label--hiding">Vertical<br />orientation</div>
@@ -81,6 +72,15 @@
                   </li>
                 </ul>
               </div>
+              <input
+                class="search-form__input"
+                type="text"
+                name="searchQuery"
+                autocomplete="off"
+                placeholder="What do you want to see..."
+                aria-label="Search field"
+                data-gallery="input"
+              />
             </div>
             <button class="search-form__submit" type="submit" id="submit-button" aria-label="Start search">
               <svg class="search-form__icon" width="20" height="20">
