@@ -5,6 +5,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import { collectDataFromLoacalStorage, recordDataToLocalStorage } from './local-storage_opetations/local-storage-operations';
 import { startGalleryScrollObserver } from './scroll-to-top/scroll-to-top';
 import GalleryGenerator from './gallery-generator/gallery-generator';
 
@@ -64,6 +65,7 @@ const refs = {
   searchFormSettingsButton: document.querySelector('button#settings-button'),
   orientationSwitch: document.querySelector('fieldset#orientation'),
   perPageField: document.querySelector('input#perPage'),
+  safeSearchCheckbox: document.querySelector('input#safeSearch'),
   scrollToTopButton: document.querySelector('button#scroll-to-top'),
 };
 
@@ -95,9 +97,21 @@ const setSearchPerPage = searchPerPage => {
   galleryGenerator.perPage = Number(searchPerPage);
 };
 
+const setSafeSearch = isSafeSearch => {
+  if (typeof isSafeSearch === 'boolean') return;
+
+  if (isSafeSearch !== refs.safeSearchCheckbox.checked) refs.safeSearchCheckbox.toggleAttribute('checked');
+  document.querySelector('span.safe-search__type').textContent = isSafeSearch ? 'Safe' : 'Adult';
+
+  galleryGenerator.safesearch = isSafeSearch;
+};
+
 const setSettingsValues = () => {
-  setSearchOrientation(localStorage.getItem('searchOrientation') ?? galleryGenerator.orientation);
-  setSearchPerPage(localStorage.getItem('searchPerPage') ?? galleryGenerator.perPage);
+  const dataFromLocalStorage = collectDataFromLoacalStorage();
+
+  setSearchOrientation(dataFromLocalStorage.searchOrientation ?? galleryGenerator.orientation);
+  setSearchPerPage(dataFromLocalStorage.searchPerPage ?? galleryGenerator.perPage);
+  setSafeSearch(dataFromLocalStorage.safeSearch ?? galleryGenerator.safesearch);
 };
 
 setSettingsValues();
@@ -105,7 +119,10 @@ setSettingsValues();
 const onFormSubmit = async event => {
   event.preventDefault();
 
-  refs.searchForm.classList.contains('settings-is-open') && onSearchFormSettingsButtonClick();
+  if (refs.searchForm.classList.contains('settings-is-open')) {
+    onSearchFormSettingsButtonClick();
+    return;
+  }
 
   await galleryGenerator.start();
 
@@ -137,7 +154,7 @@ const onOrientationSwitchClick = () => {
   galleryGenerator.orientation = currentOrientationValue;
   galleryGenerator.query = '';
 
-  localStorage.setItem('searchOrientation', currentOrientationValue);
+  recordDataToLocalStorage('searchOrientation', currentOrientationValue);
 };
 
 const onPerPageFieldInput = ({ target: input }) => {
@@ -150,7 +167,21 @@ const onPerPageFieldInput = ({ target: input }) => {
 
   galleryGenerator.perPage = currentPerPage;
 
-  localStorage.setItem('searchPerPage', currentPerPage);
+  recordDataToLocalStorage('searchPerPage', currentPerPage);
+};
+
+const onSafeSearchCheckboxChange = ({ currentTarget: { checked } }) => {
+  const searchTypeSpanRef = document.querySelector('span.safe-search__type');
+
+  searchTypeSpanRef.classList.add('on-change');
+  setTimeout(() => {
+    searchTypeSpanRef.textContent = checked ? 'Safe' : 'Adult';
+    searchTypeSpanRef.classList.remove('on-change');
+  }, 100);
+
+  galleryGenerator.safesearch = checked;
+
+  recordDataToLocalStorage('safeSearch', checked);
 };
 
 const onScrollToTopButtonClick = () => window.scrollTo(0, 0);
@@ -160,4 +191,5 @@ refs.searchFormSettingsButton.addEventListener('click', onSearchFormSettingsButt
 refs.orientationSwitch.addEventListener('click', onOrientationSwitchClick);
 refs.perPageField.addEventListener('focus', ({ currentTarget }) => currentTarget.select());
 refs.perPageField.addEventListener('input', debounce(onPerPageFieldInput, 1000));
+refs.safeSearchCheckbox.addEventListener('change', onSafeSearchCheckboxChange);
 refs.scrollToTopButton.addEventListener('click', onScrollToTopButtonClick);

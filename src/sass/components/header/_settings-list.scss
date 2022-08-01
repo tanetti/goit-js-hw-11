@@ -3,13 +3,12 @@
 
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  gap: 5px;
 
   height: 100%;
   margin: 0;
   padding: 0;
 
-  @media screen and (min-width: 420px) {
+  @media screen and (min-width: 400px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
@@ -32,19 +31,21 @@
   height: 100%;
   padding: 0;
 
-  color: #4a99ff;
+  color: $main-accent-color;
 
   border-width: 0;
 
   cursor: pointer;
 
+  transition: color $transition-timing $transition-function;
+
   &:hover,
   &:focus {
-    color: #0470fd;
+    color: $secondary-accent-color;
   }
 }
 
-.orientation__container {
+.orientation__custom-radio {
   position: absolute;
   top: 0;
   left: 0;
@@ -68,55 +69,98 @@
 }
 
 .orientation__icon {
-  margin-right: 5px;
-
   fill: currentColor;
-}
-
-.orientation__caption {
-  display: none;
-
-  width: 50px;
-
-  font-size: 8px;
-
-  color: #212121;
-
-  text-transform: uppercase;
-
-  @media screen and (min-width: 420px) {
-    display: block;
-  }
 }
 
 .per-page {
   width: 40px;
   height: 26px;
-  margin-right: 5px;
   padding: 0 5px;
 
   font-size: 15px;
   text-align: center;
 
-  color: #4a99ff;
+  color: $main-accent-color;
+
+  background-color: transparent;
 
   border-width: 1px;
-  border-color: #4a99ff;
-  border-radius: 6px;
+  border-color: $main-accent-color;
+  border-radius: 8px;
 
   outline: transparent;
+
+  transition: color $transition-timing $transition-function, border-color $transition-timing $transition-function;
 
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     appearance: none;
     margin: 0;
   }
+
+  &:hover {
+    color: $secondary-accent-color;
+
+    border-color: $secondary-accent-color;
+  }
 }
 
-.per-page-caption {
+.safe-search__custom-checkbox {
+  display: block;
+
+  padding-top: 1px;
+
+  font-size: 26px;
+
+  color: $main-accent-color;
+
+  transition: color $transition-timing $transition-function;
+
+  .safe-search__checkbox:hover + & {
+    color: $secondary-accent-color;
+  }
+
+  .safe-search__checkbox:checked + & {
+    color: #a1a1a1;
+  }
+
+  .safe-search__checkbox:checked:hover + & {
+    color: #616161;
+  }
+}
+
+.safe-search__custom-label {
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.safe-search__type {
+  transition: opacity $transition-timing $transition-function;
+
+  &.on-change {
+    opacity: 0;
+  }
+}
+
+.label {
+  margin-left: 5px;
+  padding-top: 1px;
+
   font-size: 8px;
 
-  color: #212121;
+  color: $main-txt-color;
 
   text-transform: uppercase;
+
+  cursor: pointer;
+
+  &--hiding {
+    display: none;
+
+    @media screen and (min-width: 400px) {
+      display: block;
+    }
+  }
 }
