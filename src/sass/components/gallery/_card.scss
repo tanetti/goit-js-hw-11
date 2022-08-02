@@ -22,13 +22,13 @@
 
   background-color: $card-bg-color;
 
-  box-shadow: 7px 7px 7px #8f8f8f, -7px -7px 7px #ffffff;
+  box-shadow: 7px 7px 7px #8f8f8f, -7px -7px 7px #fafafa;
 
   transition: box-shadow $transition-timing $transition-function, transform $transition-timing $transition-function;
 
   .card:hover &,
   .card:focus & {
-    box-shadow: 7px 7px 7px #757575, -7px -7px 7px #ffffff;
+    box-shadow: 7px 7px 7px #757575, -7px -7px 7px #fafafa;
 
     transform: scale(1.04);
   }
