@@ -130,6 +130,16 @@ const onFormSubmit = async event => {
 
   if (!searchField.value) {
     searchField.focus();
+
+    searchField.classList.toggle('search-form__input--hint');
+
+    let count = 0;
+    setInterval(() => {
+      if (count > 4) return;
+      searchField.classList.toggle('search-form__input--hint');
+      count += 1;
+    }, 350);
+
     return;
   }
 

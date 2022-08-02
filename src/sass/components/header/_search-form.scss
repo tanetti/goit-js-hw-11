@@ -116,6 +116,17 @@
   transition: transform $transition-timing $transition-function, visibility $transition-timing $transition-function,
     box-shadow $transition-timing $transition-function;
 
+  &::placeholder {
+    transition: color $transition-timing $transition-function;
+    color: $secondary-txt-color;
+  }
+
+  &--hint {
+    &::placeholder {
+      color: $main-accent-color;
+    }
+  }
+
   .search-form.settings-is-open & {
     visibility: hidden;
     transform: translateX(105%);
