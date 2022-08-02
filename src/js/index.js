@@ -119,8 +119,17 @@ setSettingsValues();
 const onFormSubmit = async event => {
   event.preventDefault();
 
+  const searchField = refs.searchForm.querySelector('input.search-form__input');
+
   if (refs.searchForm.classList.contains('settings-is-open')) {
     onSearchFormSettingsButtonClick();
+
+    setTimeout(() => searchField.focus(), 250);
+    return;
+  }
+
+  if (!searchField.value) {
+    searchField.focus();
     return;
   }
 
