@@ -180,6 +180,7 @@ const onSafeSearchCheckboxChange = ({ currentTarget: { checked } }) => {
   }, 110);
 
   galleryGenerator.safesearch = checked;
+  galleryGenerator.query = '';
 
   recordDataToLocalStorage('safeSearch', checked);
 };
