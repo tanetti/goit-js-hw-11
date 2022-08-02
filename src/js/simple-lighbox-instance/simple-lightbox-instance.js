@@ -5,5 +5,6 @@ export const gallery = new SimpleLightbox('div.gallery__content a', {
   maxZoom: 4,
   overlayOpacity: 0.85,
   captionsData: 'alt',
+  disableRightClick: true,
   alertError: false,
 });
