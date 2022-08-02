@@ -9,11 +9,16 @@
   width: 100vw;
 
   background-color: $header-bg-color;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(6px);
 
   border-bottom: 1px solid #aaaaaa80;
 
-  box-shadow: 0px 1px 3px #eeeeee34, 0px 1px 1px #aaaaaa34, 0px 2px 1px #eeeeee34;
+  transition: opacity $transition-timing $transition-function, transform $transition-timing $transition-function;
+
+  &.is-hidden {
+    opacity: 0;
+    transform: translateY(-105%);
+  }
 }
 
 .header__container {

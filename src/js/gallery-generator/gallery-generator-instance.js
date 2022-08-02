@@ -7,7 +7,7 @@ galleryGenerator.init({
   onSuccess: Notify.success,
   onFailure: Notify.failure,
   simpleLightboxInstance: gallery,
-  aosAnimation: 'zoom-in-up',
+  aosAnimation: 'fade-up',
 
   // ------ Options and default values ------
 

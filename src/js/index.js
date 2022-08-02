@@ -1,5 +1,6 @@
 import '../sass/index.scss';
 import debounce from 'lodash.debounce';
+import throttle from 'lodash.throttle';
 import { Notify } from 'notiflix';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
@@ -8,6 +9,7 @@ import { setSettingsValues } from './settings/set-settings-values';
 import * as settingsActions from './settings/settings-actions';
 import { onFormSubmit } from './form-submit/form-submit';
 import { onScrollToTopButtonClick } from './scroll-to-top/scroll-to-top';
+import { onPageScroll } from './on-page-scroll/on-page-scroll';
 
 Notify.init({
   position: 'center-bottom',
@@ -29,3 +31,4 @@ refs.perPageField.addEventListener('focus', ({ currentTarget }) => currentTarget
 refs.perPageField.addEventListener('input', debounce(settingsActions.onPerPageFieldInput, 1000));
 refs.safeSearchCheckbox.addEventListener('change', settingsActions.onSafeSearchCheckboxChange);
 refs.scrollToTopButton.addEventListener('click', onScrollToTopButtonClick);
+document.addEventListener('scroll', throttle(onPageScroll, 200));
