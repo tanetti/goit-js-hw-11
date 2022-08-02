@@ -1,7 +1,6 @@
-const refs = {
-  galleryContent: document.querySelector('div#gallery-content'),
-  scrollToTopButton: document.querySelector('button#scroll-to-top'),
-};
+import { refs } from '../refs/refs';
+
+export const onScrollToTopButtonClick = () => scrollTo(0, 0);
 
 let galleryScrollObserver = null;
 
